@@ -1,25 +1,43 @@
-# x86-64 Compiler 
+# tunnl - An interpreter written in C++
 
-A C++ compiler that translates a minimal language into x86-64 assembly for Linux.  
-Includes a unit test script to verify output. Demonstrates **AST construction, recursive descent parsing, variable management, arithmetic evaluation, control flow, and low-level code generation**.
+A small expression-based langauge implemented from scratch in 
+C++. It tokenizes, parses into an AST, and interprets code directly.  **AST construction, recursive descent parsing, and tree walking interpretation**.
+
+## Features
+* Interactive REPL 
+* Arithmetic expressions
+* Variable bindings 
+* Clean exit 
+* tokenizer -> parser -> interpreter 
+
+### Example
+```bash
+>>> let x = 10;
+10
+>>> x * 3 + 2;
+32
+>>> let y = x - 4;
+6
+>>> y + x;
+16
+>>> exit 0;
+```
 
 ## Directory Structure
 ```bash
 project-root/
 ├── build/ # CMake build directory
-├── compiler_test.sh # Bash unit test script
-├── testInput.txt # Sample input source code
-├── expectedAssembly.asm # Expected assembly output
-├── output.asm # Actual compiler output
 ├── CMakeLists.txt # Project build configuration
-└── src/ # Compiler source files
+└── src/ # Interpreter source files
+    └── main.cpp
+    ├── tokenization.hpp   → Lexer / Tokenizer
+    ├── parser.hpp         → AST + Recursive-Descent Parser
+    └── interpreter.hpp    → Tree-Walk Evaluator
 ```
 
-## Requirements 
-- Linux OS
-- `nasm` and `ld` installed.
 
-## Building the Compiler
+
+### Building the Interpreter
 ```bash
 mkdir -p build
 cd build
@@ -28,13 +46,26 @@ make
 ```
 The executable will be `testy` in the `build/` directory.
 
+### or start the REPL
+```bash
+./testy
+```
 
-## Running the Unit Test
+### Language Design Overview
+* Tokenizer - converts raw text into Token object like IntLit, Ident, Plus, etc.
+* Parser - Builds an Abstract Syntax Tree (AST) of Nodes (Let, BinExpr, Exit, etc.)
+* Interpreter - Walks the AST and executes code in C++ using a dynamic environment map
+
+# Result
+A langauge runtime that models how real interpreters like Python or Lua execute code 
+
+
+<!-- ## Running the Unit Test
 ```bash
 chmod +x compiler_test.sh
 ./compiler_test.sh
-```
-
+``` -->
+<!-- 
 The script: 
 1. Creates a sample input file (testInput.txt).
 2. Creates the expected assembly output (expectedAssembly.asm).
@@ -79,4 +110,4 @@ _start:
 - Whitespace is normalized for reliable output comparison.
 - Designed for a local Linux environment; minor adjustments may be needed for Windows/MacOS.
 
-## x86 Compiler.
+## x86 Compiler. -->

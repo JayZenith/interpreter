@@ -1,62 +1,67 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include "tokenization.hpp"  // must define Token + TokenType
-#include "parser.hpp"        // your AST + Parser
-#include "generation.hpp"     // we’ll assume you have a Generator class
-#include <chrono>
+#include "tokenization.hpp"
+#include "parser.hpp"
+#include "interpreter.hpp"
 
+void run_file(const std::string& filename) {
+    std::ifstream input(filename);
+    if (!input) {
+        std::cerr << "Could not open file: " << filename << "\n";
+        return;
+    }
+
+    std::stringstream ss;
+    ss << input.rdbuf();
+    std::string contents = ss.str();
+
+    Tokenizer tokenizer(contents);
+    auto tokens = tokenizer.tokenize();
+
+    Parser parser(tokens);
+    auto program = parser.parse_program();
+
+    Interpreter interp;
+    interp.eval_program(program);
+}
+
+void run_repl() {
+    Interpreter interp;
+    std::string line;
+    while (true) {
+        std::cout << ">>> ";
+        if (!std::getline(std::cin, line)) break;
+        if (line.empty()) continue;
+
+        Tokenizer tokenizer(line);
+        auto tokens = tokenizer.tokenize();
+
+        Parser parser(tokens);
+        auto program = parser.parse_program();
+
+        try {
+            int result = interp.eval_program(program);
+            std::cout << result << "\n";
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << "\n";
+        }
+    }
+}
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <source_file> \n";
-        return 1;
+        std::cout << "Running REPL. Type 'exit <num>;' to quit.\n";
+        run_repl();
+    } else {
+        run_file(argv[1]);
     }
-
-    std::string filename = argv[1];
-
-    std::string contents;
-    { 
-        std::stringstream ss;
-        std::ifstream input(filename);
-        ss << input.rdbuf();
-        contents = ss.str();
-    } // input's destructor runs to close file 
-
-    // 1. Tokenize
-    Tokenizer tokenizer(std::move(contents));
-    auto tokens = tokenizer.tokenize();//deduced to vector<Token> w
-
-    // 2. Parse into AST
-    Parser parser(tokens); 
-    
-    auto start = std::chrono::high_resolution_clock::now();
-
-    //deduced to std::vector<Node> 
-    auto program = parser.parse_program();
-
-    // NASM assembly backend 
-    Generator gen(program);  // assume your generator takes AST nodes
-    std::string asm_code = gen.generate();
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "Elapsed time: " << elapsed.count() << " s\n";
-
-    // 4. Write to file
-    std::ofstream out("nasm_out.s");
-    out << asm_code;
-    out.close();
-
-    std::cout << "Assembly written to nasm_out.s\n";
-    std::cout << "Run with:\n";
-    std::cout << "  nasm -f elf64 nasm_out.s -o nasm_out.o && ld nasm_out.o -o nasm_out && ./nasm_out\n";
-
     return 0;
 }
+
 
 // #include <iostream>
 // #include <fstream>

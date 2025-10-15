@@ -1,30 +1,58 @@
 cmake_minimum_required(VERSION 3.20)
 project(testing)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    message(STATUS "Adding coverage compile flags")
+    add_compile_options(-O0 -g --coverage -fprofile-arcs -ftest-coverage)
+    add_link_options(--coverage)
+endif()
 
+
+set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 20)
 
-# Find LLVM
-find_package(LLVM REQUIRED CONFIG)
+# add_library(tunnl_lib src/main.cpp)
+add_library(tunnl_lib
+    src/main.cpp
+    src/interpreter.cpp
+    src/parser.cpp
+    src/tokenization.cpp
+)
+target_include_directories(tunnl_lib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-message(STATUS "LLVM_INCLUDE_DIRS: ${LLVM_INCLUDE_DIRS}")
-message(STATUS "LLVM_DEFINITIONS: ${LLVM_DEFINITIONS}")
 
-# Include LLVM headers
-include_directories(${LLVM_INCLUDE_DIRS})
-add_definitions(${LLVM_DEFINITIONS})
+add_subdirectory(external/googletest googletest-build)
 
+# # Test executable
+# add_executable(interpreter_tests tests/test_interpreter.cpp
+# )
+
+# # Tell CMake where to find headers
+# target_include_directories(interpreter_tests PRIVATE
+#     ${PROJECT_SOURCE_DIR}/src
+# )
+
+# target_link_libraries(interpreter_tests PRIVATE tunnl_lib gtest_main)
+
+add_executable(interpreter_tests
+    tests/test_interpreter.cpp
+)
+
+target_link_libraries(interpreter_tests PRIVATE tunnl_lib gtest_main)
+target_include_directories(interpreter_tests PRIVATE ${PROJECT_SOURCE_DIR}/src)
+
+
+
+# Tell CTest to run your executable (optional, can be skipped)
+enable_testing()
+add_test(NAME RunInterpreterTests COMMAND interpreter_tests)
 
 # Source files (header-only generators are included via main.cpp)
 add_executable(testy 
     src/main.cpp
-    src/tokenization.hpp
-    src/parser.hpp
-    src/generation.hpp
-    src/llvm_generator.hpp
+    src/tokenization.cpp
+    src/parser.cpp
+    src/interpreter.cpp
 )
 
+target_link_libraries(testy PRIVATE tunnl_lib)
 
-# Link LLVM libraries
-llvm_map_components_to_libnames(llvm_libs core irreader support)
-target_link_libraries(testy ${llvm_libs})
