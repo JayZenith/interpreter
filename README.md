@@ -1,14 +1,13 @@
-# tunnl - An interpreter written in C++
+# tunnl - A Tree-Walking Interpreter in C++
 
-A small expression-based langauge implemented from scratch in 
-C++. It tokenizes, parses into an AST, and interprets code directly.  **AST construction, recursive descent parsing, and tree walking interpretation**.
+A dynamically-typed expression-based language built from scratch in C++. Features a tokenizer, recursive descent parser, and tree-walking interpreter with an interactive REPL.
 
 ## Features
-* Interactive REPL 
-* Arithmetic expressions
-* Variable bindings 
-* Clean exit 
-* tokenizer -> parser -> interpreter 
+* Interactive REPL for live code execution
+* Arithmetic expressions with operator precedence
+* Variable bindings with lexical scoping
+* AST-based execution via tree-walk evaluation
+* Clean pipeline: tokenizer -> parser -> interpreter 
 
 ### Example
 ```bash
@@ -23,41 +22,41 @@ C++. It tokenizes, parses into an AST, and interprets code directly.  **AST cons
 >>> exit 0;
 ```
 
-## Directory Structure
+## Architecture 
 ```bash
-project-root/
-├── build/ # CMake build directory
-├── CMakeLists.txt # Project build configuration
-└── src/ # Interpreter source files
-    └── main.cpp
-    ├── tokenization.hpp   → Lexer / Tokenizer
-    ├── parser.hpp         → AST + Recursive-Descent Parser
-    └── interpreter.hpp    → Tree-Walk Evaluator
+src/ # Interpreter source files
+├── tokenization.hpp   → Lexer / Tokenizer
+├── parser.hpp         → AST + Recursive-Descent Parser
+└── interpreter.hpp    → Tree-Walk Evaluator
 ```
 
+### Pipeline:
+1. Tokenizer – Converts source text into tokens (IntLit, Ident, Plus, etc.)
+2. Parser – Builds an AST from tokens using recursive descent
+3. Interpreter – Evaluates the AST with a dynamic environment map
 
 
-### Building the Interpreter
+# Quick Start
+### Build
 ```bash
-mkdir -p build
-cd build
-cmake ..
-make
+mkdir build && cd build
+cmake .. && make
 ```
 The executable will be `testy` in the `build/` directory.
 
-### or start the REPL
+### Run REPL
 ```bash
 ./testy
 ```
 
-### Language Design Overview
-* Tokenizer - converts raw text into Token object like IntLit, Ident, Plus, etc.
-* Parser - Builds an Abstract Syntax Tree (AST) of Nodes (Let, BinExpr, Exit, etc.)
-* Interpreter - Walks the AST and executes code in C++ using a dynamic environment map
+### Implementation Highlights
+* Recursive descent parsing for expressions and statements
+* Dynamic typing with runtime value evaluation
+* Environment-based variable resolution using std::unordered_map
+* RAII for memory safety with unique_ptr-based AST nodes
 
-# Result
-A langauge runtime that models how real interpreters like Python or Lua execute code 
+# What I learned 
+A langauge runtime that models how real interpreters like Python or Lua execute code, from lexical analysis through syntax tree construction to runtime evaluation.
 
 
 <!-- ## Running the Unit Test
