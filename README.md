@@ -1,6 +1,6 @@
-# tunnl - A Tree-Walking Interpreter in C++
+# Interpreter
 
-A dynamically-typed expression-based language built from scratch in C++. Features a tokenizer, recursive descent parser, and tree-walking interpreter with an interactive REPL.
+A dynamically-typed expression-based language built in C++. Features a tokenizer, recursive descent parser, and tree-walking interpreter with an interactive REPL.
 
 ## Features
 * REPL for live code execution
