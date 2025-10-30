@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "tokenization.hpp"
-#include "parser.hpp"
-#include "interpreter.hpp"
+#include "../include/tokenization.h"
+#include "../include/parser.h"
+#include "../include/interpreter.h"
 
 void run_file(const std::string& filename) {
     std::ifstream input(filename);

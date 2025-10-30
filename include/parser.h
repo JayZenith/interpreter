@@ -31,7 +31,7 @@ struct NodeBinExpr : Node {
     std::string op;
     std::unique_ptr<Node> lhs;
     std::unique_ptr<Node> rhs;
-    NodeBinExpr(std::string o, std::unique_ptr<Node> l, std::unique_ptr<Node> r);
+    NodeBinExpr(const std::string& o, std::unique_ptr<Node> l, std::unique_ptr<Node> r);
 };
 
 // === Variable Definition Node ===

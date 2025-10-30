@@ -1,8 +1,7 @@
 #include "parser.h"
 #include <stdexcept>
 
-// === Node Constructors ===
-
+// Node Constructors 
 NodeIntLit::NodeIntLit(int v) {
     type = NodeType::IntLit;
     value = v;
@@ -13,7 +12,7 @@ NodeIdent::NodeIdent(const std::string& n) {
     name = n;
 }
 
-NodeBinExpr::NodeBinExpr(std::string o, std::unique_ptr<Node> l, std::unique_ptr<Node> r)
+NodeBinExpr::NodeBinExpr(const std::string& o, std::unique_ptr<Node> l, std::unique_ptr<Node> r)
     : op(std::move(o)), lhs(std::move(l)), rhs(std::move(r)) {
     type = NodeType::BinExpr;
 }
@@ -38,7 +37,8 @@ std::vector<std::unique_ptr<Node>> Parser::parse_program() {
     while (!match(TokenType::Eof)) {
         if (check(TokenType::Let)) stmts.push_back(parse_let());
         else if (check(TokenType::Exit)) stmts.push_back(parse_exit());
-        else throw std::runtime_error("Unexpected token in program");
+        else stmts.push_back(parse_expr());  //handle top-level expressions
+        // else throw std::runtime_error("Unexpected token in program");
     }
     return stmts;
 }

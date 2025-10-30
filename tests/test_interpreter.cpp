@@ -1,6 +1,6 @@
-#include "interpreter.hpp"
-#include "parser.hpp"
-#include "tokenization.hpp"
+#include "../include/interpreter.h"
+#include "../include/parser.h"
+#include "../include/tokenization.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -23,7 +23,7 @@ std::unique_ptr<NodeExit> exitNode(std::unique_ptr<Node> expr) {
     return std::make_unique<NodeExit>(std::move(expr));
 }
 
-// ==================== Interpreter Tests ====================
+// Interpreter Tests 
 
 TEST(InterpreterTest, IntLiteral) {
     std::vector<std::unique_ptr<Node>> program;
@@ -88,30 +88,30 @@ TEST(InterpreterTest, ExitNodeExits) {
 // ==================== Parser + Integration Tests ====================
 // Only if parser.hpp/cpp exist
 
-// TEST(ParserTest, ParseIntLiteral) {
-//     std::vector<Token> tokens = { Token(TokenType::IntLit, "123"), Token(TokenType::Eof, "") };
-//     Parser parser(tokens);
-//     auto ast = parser.parse_program();
-//     ASSERT_EQ(ast.size(), 1);
-//     Interpreter interp;
-//     EXPECT_EQ(interp.eval_program(ast), 123);
-// }
+TEST(ParserTest, ParseIntLiteral) {
+    std::vector<Token> tokens = { Token(TokenType::IntLit, "123"), Token(TokenType::Eof, "") };
+    Parser parser(tokens);
+    auto ast = parser.parse_program();
+    ASSERT_EQ(ast.size(), 1);
+    Interpreter interp;
+    EXPECT_EQ(interp.eval_program(ast), 123);
+}
 
-// TEST(ParserTest, ParseLetStatement) {
-//     std::vector<Token> tokens = {
-//         Token(TokenType::Let, "let"),
-//         Token(TokenType::Ident, "x"),
-//         Token(TokenType::Eq, "="),
-//         Token(TokenType::IntLit, "7"),
-//         Token(TokenType::Semi, ";"),
-//         Token(TokenType::Eof, "")
-//     };
-//     Parser parser(tokens);
-//     auto ast = parser.parse_program();
-//     ASSERT_EQ(ast.size(), 1);
-//     Interpreter interp;
-//     EXPECT_EQ(interp.eval_program(ast), 7);
-// }
+TEST(ParserTest, ParseLetStatement) {
+    std::vector<Token> tokens = {
+        Token(TokenType::Let, "let"),
+        Token(TokenType::Ident, "x"),
+        Token(TokenType::Eq, "="),
+        Token(TokenType::IntLit, "7"),
+        Token(TokenType::Semi, ";"),
+        Token(TokenType::Eof, "")
+    };
+    Parser parser(tokens);
+    auto ast = parser.parse_program();
+    ASSERT_EQ(ast.size(), 1);
+    Interpreter interp;
+    EXPECT_EQ(interp.eval_program(ast), 7);
+}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

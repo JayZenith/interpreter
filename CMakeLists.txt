@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(testing)
+
+# Enable coverage flags for GCC/Clang
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     message(STATUS "Adding coverage compile flags")
     add_compile_options(-O0 -g --coverage -fprofile-arcs -ftest-coverage)
@@ -20,19 +22,18 @@ add_library(tunnl_lib
 target_include_directories(tunnl_lib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 
-add_subdirectory(external/googletest googletest-build)
+# add_subdirectory(external/googletest googletest-build)
+# Fetch GoogleTest automatically
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG         v1.17.0
+)
+FetchContent_MakeAvailable(googletest)
 
-# # Test executable
-# add_executable(interpreter_tests tests/test_interpreter.cpp
-# )
 
-# # Tell CMake where to find headers
-# target_include_directories(interpreter_tests PRIVATE
-#     ${PROJECT_SOURCE_DIR}/src
-# )
-
-# target_link_libraries(interpreter_tests PRIVATE tunnl_lib gtest_main)
-
+# Test executable
 add_executable(interpreter_tests
     tests/test_interpreter.cpp
 )
