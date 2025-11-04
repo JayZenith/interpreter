@@ -11,24 +11,25 @@ std::vector<Token> Tokenizer::tokenize() {
 
     while (i < m_input.size()) {
         char c = m_input[i];
+        // cast expects int in range 0..255 or EOF to avoid UB
         if (isspace(static_cast<unsigned char>(c))) {
             i++;
             continue;
         }
 
-        // === Integer literal ===
+        // handles int lit 
         if (isdigit(static_cast<unsigned char>(c))) {
             size_t start = i;
-            while (i < m_input.size() && isdigit(static_cast<unsigned char>(m_input[i])))
+            while (i < m_input.size() && isdigit(static_cast<unsigned char>(m_input[i]))) //while still a digit
                 i++;
             tokens.push_back({TokenType::IntLit, m_input.substr(start, i - start)});
             continue;
         }
 
-        // === Identifier or Keyword ===
+        // ident or keyword
         if (isalpha(static_cast<unsigned char>(c))) {
             size_t start = i;
-            while (i < m_input.size() && isalnum(static_cast<unsigned char>(m_input[i])))
+            while (i < m_input.size() && isalnum(static_cast<unsigned char>(m_input[i]))) //while still a letter or digit
                 i++;
             std::string word = m_input.substr(start, i - start);
             if (word == "let")
@@ -40,7 +41,7 @@ std::vector<Token> Tokenizer::tokenize() {
             continue;
         }
 
-        // === Single-character tokens ===
+        // not covered by above ops 
         switch (c) {
             case '+': tokens.push_back({TokenType::Plus, "+"}); break;
             case '-': tokens.push_back({TokenType::Minus, "-"}); break;

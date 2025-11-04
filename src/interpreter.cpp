@@ -1,7 +1,7 @@
 #include "interpreter.h"
 #include <stdexcept>
 #include <iostream>
-#include <cstdlib> // for std::exit
+#include <cstdlib> 
 
 int Interpreter::eval_program(const std::vector<std::unique_ptr<Node>>& stmts) {
     int last = 0;
@@ -17,7 +17,7 @@ int Interpreter::eval_node(const Node* node) {
     }
 
     if (auto ident = dynamic_cast<const NodeIdent*>(node)) {
-        auto it = env.find(ident->name);
+        auto it = env.find(ident->name); //if ident was not assigned a value via let we get it == env.end()
         if (it == env.end()) throw std::runtime_error("Undefined variable: " + ident->name);
         return it->second;
     }
@@ -33,9 +33,10 @@ int Interpreter::eval_node(const Node* node) {
     }
 
     if (auto let = dynamic_cast<const NodeLet*>(node)) {
-        int val = eval_node(let->expr.get());
-        env[let->name] = val;
-        return val;
+        //let x = 5; x -> prints 5
+        int val = eval_node(let->expr.get()); //retreive val 5
+        env[let->name] = val; //x -> 5
+        return val; //return 5
     }
 
     if (auto exit = dynamic_cast<const NodeExit*>(node)) {

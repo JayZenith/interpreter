@@ -5,28 +5,28 @@
 #include <memory>
 #include <optional>
 
-// === AST Node Type Enum ===
+// Node Type
 enum class NodeType { IntLit, Ident, BinExpr, Let, Exit };
 
-// === Base AST Node ===
+// Base Node
 struct Node {
-    virtual ~Node() = default; // polymorphic base
+    virtual ~Node() = default; // polymorphic base esp for dynamic cast 
     NodeType type;
 };
 
-// === Integer Literal Node ===
+
 struct NodeIntLit : Node {
     int value;
     explicit NodeIntLit(int v);
 };
 
-// === Identifier Node ===
+
 struct NodeIdent : Node {
     std::string name;
     explicit NodeIdent(const std::string& n);
 };
 
-// === Binary Expression Node ===
+
 struct NodeBinExpr : Node {
     std::string op;
     std::unique_ptr<Node> lhs;
@@ -34,20 +34,20 @@ struct NodeBinExpr : Node {
     NodeBinExpr(const std::string& o, std::unique_ptr<Node> l, std::unique_ptr<Node> r);
 };
 
-// === Variable Definition Node ===
+
 struct NodeLet : Node {
     std::string name;
     std::unique_ptr<Node> expr;
     NodeLet(const std::string& n, std::unique_ptr<Node> e);
 };
 
-// === Exit Node ===
+
 struct NodeExit : Node {
     std::unique_ptr<Node> expr;
     explicit NodeExit(std::unique_ptr<Node> e);
 };
 
-// === Parser ===
+
 class Parser {
 public:
     explicit Parser(const std::vector<Token>& tokens);

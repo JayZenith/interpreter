@@ -2,15 +2,9 @@
 #include <stdexcept>
 
 // Node Constructors 
-NodeIntLit::NodeIntLit(int v) {
-    type = NodeType::IntLit;
-    value = v;
-}
+NodeIntLit::NodeIntLit(int v) { type = NodeType::IntLit; value = v; }
 
-NodeIdent::NodeIdent(const std::string& n) {
-    type = NodeType::Ident;
-    name = n;
-}
+NodeIdent::NodeIdent(const std::string& n) { type = NodeType::Ident; name = n; }
 
 NodeBinExpr::NodeBinExpr(const std::string& o, std::unique_ptr<Node> l, std::unique_ptr<Node> r)
     : op(std::move(o)), lhs(std::move(l)), rhs(std::move(r)) {
@@ -27,7 +21,7 @@ NodeExit::NodeExit(std::unique_ptr<Node> e)
     type = NodeType::Exit;
 }
 
-// === Parser Implementation ===
+// PARSER 
 
 Parser::Parser(const std::vector<Token>& tokens)
     : m_tokens(tokens) {}
@@ -37,7 +31,7 @@ std::vector<std::unique_ptr<Node>> Parser::parse_program() {
     while (!match(TokenType::Eof)) {
         if (check(TokenType::Let)) stmts.push_back(parse_let());
         else if (check(TokenType::Exit)) stmts.push_back(parse_exit());
-        else stmts.push_back(parse_expr());  //handle top-level expressions
+        else stmts.push_back(parse_expr());  // else handle printing nums, etc.
         // else throw std::runtime_error("Unexpected token in program");
     }
     return stmts;

@@ -8,33 +8,6 @@ A dynamically-typed expression-based language built in C++. Features a tokenizer
 * Variable bindings with lexical scoping
 * AST-based execution via tree-walk evaluation
 
-### Example
-```bash
->>> let x = 10;
-10
->>> x * 3 + 2;
-32
->>> let y = x - 4;
-6
->>> y + x;
-16
->>> exit 0;
-```
-
-## Architecture 
-```bash
-src/ # Interpreter source files
-├── tokenization.hpp   → Lexer / Tokenizer
-├── parser.hpp         → AST + Recursive-Descent Parser
-└── interpreter.hpp    → Tree-Walk Evaluator
-```
-
-### Pipeline:
-1. Tokenizer – Converts source text into tokens (IntLit, Ident, Plus, etc.)
-2. Parser – Builds an AST from tokens using recursive descent
-3. Interpreter – Evaluates the AST with a dynamic environment map
-
-
 # Quick Start
 ### Build
 ```bash
@@ -46,6 +19,19 @@ The executable will be `testy` in the `build/` directory.
 ### Run REPL
 ```bash
 ./testy
+```
+
+### Example
+```bash
+>>> let x = 10;
+10
+>>> x * 3 + 2;
+32
+>>> let y = x - 4;
+6
+>>> y + x;
+16
+>>> exit 0;
 ```
 
 
