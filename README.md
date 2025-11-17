@@ -1,6 +1,6 @@
 # Interpreter
 
-A dynamically-typed expression-based language built in C++. Features a tokenizer, recursive descent parser, and tree-walking interpreter with an interactive REPL.
+An imperative, expression-based language built in C++. Features a tokenizer, recursive-descent parser, and a tree-walking interpreter with an interactive REPL.
 
 ## Features
 * REPL for live code execution
@@ -36,5 +36,5 @@ The executable will be `testy` in the `build/` directory.
 
 
 # What I learned 
-A langauge runtime that models how real interpreters like Python or Lua execute code, from lexical analysis through syntax tree construction to runtime evaluation.
+Built a simple interpreter from scratch, covering lexical analysis, AST construction, and runtime evaluation. Gained hands-on experience with smart pointers, RAII, and recursive parsing in C++.
 
